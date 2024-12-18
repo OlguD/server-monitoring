@@ -22,7 +22,7 @@ A Django web application developed for monitoring and managing server status.
 ### Clone the project
 
 ```bash
-git clone [repository-url]
+git clone git@github.com:OlguD/server-monitoring.git
 cd server-monitoring
 ```
 
