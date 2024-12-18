@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Monitoring | {% block title %}{% endblock %}</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-900 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-xl">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="{% if message.tags == 'error' %}text-red-500{% else %}text-green-500{% endif %} mb-4 text-center">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <h1 class="text-2xl font-bold text-white mb-6 text-center">{% block header %}{% endblock %}</h1>
+            
+            <form method="post">
+                {% csrf_token %}
+                {% block form_content %}{% endblock %}
+            </form>
+
+            {% block extra_content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>
