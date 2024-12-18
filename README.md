@@ -2,6 +2,8 @@
 
 A Django web application developed for monitoring and managing server status.
 
+![Server Monitoring Dashboard](assets/server-monitoring-dashboard.png)
+
 ## Features
 
 - **User Management** (Register, Login, Logout)
@@ -62,24 +64,6 @@ npm run dev
 python manage.py runserver
 ```
 
-## Project Structure
-
-```
-serverMonitoring/
-├── serverMonitoring/      # Main project directory
-├── monitor/              # Monitor application
-│   ├── templates/       # Monitor templates
-│   └── static/         # Static files
-├── user/                # User management application
-│   ├── templates/      # User templates
-│   └── views.py       # User views
-├── static/             # General static files
-│   ├── css/
-│   └── src/
-├── manage.py
-├── requirements.txt
-└── package.json
-```
 
 ## Usage
 
@@ -95,10 +79,7 @@ serverMonitoring/
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Create a Pull Request
 
-## License
-
-This project is licensed under the [LICENSE_NAME] - see the LICENSE file for details.
 
 ## Contact
 
-[Your contact information]
+olgudegirmenci34@gmail.com
