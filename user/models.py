@@ -10,4 +10,4 @@ class User(models.Model):
     is_admin = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.name, is_active, is_admin
+        return f"{self.username} {self.is_active} {self.is_admin}"

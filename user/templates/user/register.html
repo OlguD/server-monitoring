@@ -9,34 +9,45 @@
         <input 
             type="text" 
             name="username" 
-            placeholder="Username" 
+            placeholder="Username*" 
             class="w-full p-3 rounded-lg bg-white/10 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
             required
         >
         <input 
             type="email" 
             name="email" 
-            placeholder="Email" 
+            placeholder="Email*" 
             class="w-full p-3 rounded-lg bg-white/10 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
             required
         >
         <input 
             type="password" 
             name="password" 
-            placeholder="Password" 
+            placeholder="Password*" 
             class="w-full p-3 rounded-lg bg-white/10 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
             required
         >
+        <input 
+            type="password" 
+            name="password1" 
+            placeholder="Confirm Password*" 
+            class="w-full p-3 rounded-lg bg-white/10 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
+            required
+        >
+        </div>
+
         <button 
             type="submit"
-            class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors font-medium mt-4"
         >
             Register
         </button>
+
+        <div class="mt-4 text-center text-gray-400">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="text-blue-500 hover:text-blue-400">Login</a>
+        </div>
     </div>
 
-    <div class="mt-4 text-center text-gray-400">
-        Already have an account? 
-        <a href="{% url 'login' %}" class="text-blue-500 hover:text-blue-400">Login</a>
-    </div>
+
 {% endblock %}
