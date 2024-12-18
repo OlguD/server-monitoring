@@ -1,4 +1,4 @@
-{% extends "base_dashboard.html" %}
+{% extends "monitor/base_dashboard.html" %}
 
 {% block title %}
     Dashboard
@@ -11,12 +11,106 @@
             {% comment %} CPU Status {% endcomment %}
             <div class="bg-white rounded-lg shadow p-4">
                 <h3 class="text-gray-600 font-medium">CPU Usage</h3>
-                <div class="text-2xl font-bold mt-2">45%</div>
+                <div class="text-2xl font-bold mt-2">{{ cpu.usage }}</div>
                 <div class="bg-gray-200 rounded-full h-2 mt-2">
                     <div class="bg-blue-500 rounded-full h-2" style="width: 45%"></div>
                 </div>
             </div>
+
+            {% comment %} Memory Usage {% endcomment %}
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-gray-600 font-medium">Memory Usage</h3>
+                <div class="text-2xl font-bold mt-2">{{ memory.usage }}</div>
+                <div class="bg-gray-200 rounded-full h-2 mt-2">
+                    <div class="bg-green-500 rounded-full h-2" style="width: 51%"></div>
+                </div>
+            </div>
+
+            {% comment %} Disk Usage {% endcomment %}
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-gray-600 font-medium">Disk Space</h3>
+                <div class="text-2xl font-bold mt-2">{{ disk.usage }}</div>
+                <div class="bg-gray-200 rounded-full h-2 mt-2">
+                    <div class="bg-yellow-500 rounded-full h-2" style="width: 47%"></div>
+                </div>
+            </div>
+
+            {% comment %} Network Traffic {% endcomment %}
+            <div class="bg-white rounded-lg shadow p-4">
+                <h3 class="text-gray-600 font-medium">Network Traffic</h3>
+                <div class="text-2xl font-bold mt-2">{{ network.total_usage_gb }} GB/s</div>
+                <div class="flex justify-between text-sm text-gray-500">
+                    <span>↑ {{ network.sent_mb }} MB/s</span>
+                    <span>↓ {{ network.recv_mb }} MB/s</span>
+                </div>
+            </div>
         </div>
+
+        <div class="bg-white rounded-lg shadow mb-6">
+            <div class="p-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold">Active Processes</h2>
+            </div>
+            <div class="p-4">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="text-left">Process Name</th>
+                            <th class="text-left">CPU</th>
+                            <th class="text-left">Memory</th>
+                            <th class="text-left">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% if processes|length == 0 %}
+                            <tr>
+                                <td colspan="4" class="py-2 text-center text-gray-500">No processes consuming more than 0.05% Memory or CPU.</td>
+                            </tr>
+                        {% else %}
+                            {% for proc in processes %}
+                                <tr>
+                                    <td class="py-2">{{ proc.name }}</td>
+                                    <td>{{ proc.cpu_percent }} %</td>
+                                    <td>{{ proc.memory_percent}} MB</td>
+                                    <td><span class="text-green-600">{{ proc.status }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% comment %} <div class="bg-white rounded-lg shadow mb-6">
+            <div class="p-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold">Recent System Logs</h2>
+            </div>
+            <div class="p-4">
+                <div class="space-y-2">
+                    <div class="flex items-center text-sm">
+                        <span class="text-yellow-500 mr-2">⚠️</span>
+                        <span class="text-gray-500 mr-2">10:45 AM</span>
+                        <span>High CPU usage detected (85%)</span>
+                    </div>
+                    <div class="flex items-center text-sm">
+                        <span class="text-green-500 mr-2">✓</span>
+                        <span class="text-gray-500 mr-2">10:30 AM</span>
+                        <span>System backup completed successfully</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="text-lg font-semibold mb-4">CPU Usage Over Time</h2>
+                <canvas id="cpuChart" height="200"></canvas>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="text-lg font-semibold mb-4">Memory Usage Over Time</h2>
+                <canvas id="memoryChart" height="200"></canvas>
+            </div>
+        </div> {% endcomment %}
+
     </main>
 
 {% endblock %}
