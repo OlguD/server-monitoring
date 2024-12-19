@@ -61,6 +61,9 @@ def save_settings(request):
 def dashboard(request):
     # AllMonitorModel doğrudan render'a gönderilemez
     # Dictionary'ye dönüştürülmeli veya context oluşturulmalı
+    # user = User.objects.filter(id=request.user.id).first()
+    # user_config = UserConfig.objects.get_or_create(user=user)
+    # check_interval = user_config[0].check_interval
 
     network_data = MonitorTools.network_usage()
 
