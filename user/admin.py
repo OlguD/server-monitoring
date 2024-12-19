@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User
+from .models import User, UserConfig
 
 # Register your models here.
 class UserAdmin(admin.ModelAdmin):
@@ -9,3 +9,4 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ('username',)
 
 admin.site.register(User, UserAdmin)
+admin.site.register(UserConfig)
