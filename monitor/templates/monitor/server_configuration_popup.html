@@ -1,0 +1,82 @@
+<form action="{% url 'add_server' %}" method="POST" class="relative space-y-4" id="serverConfigurationPopup">
+    {% csrf_token %}
+    <!-- Çarpı ikonu -->
+    <button 
+        type="button"
+        id="closeServerConfigurationPopup"
+        class="absolute -top-9 -right-2 text-gray-400 hover:text-gray-200 transition-colors bg-gray-800 rounded-full p-1"
+    >
+        <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-6 w-6" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+        >
+            <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M6 18L18 6M6 6l12 12"
+            />
+        </svg>
+    </button>
+
+    <input 
+        type="text" 
+        name="name" 
+        placeholder="Server Name (Optional)" 
+        class="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
+    >
+    <input 
+        type="text" 
+        name="ip" 
+        placeholder="IP*" 
+        class="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
+        required
+    >
+    <input 
+        type="number" 
+        name="port" 
+        placeholder="PORT*" 
+        class="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
+        required
+    >
+    <input 
+        type="text" 
+        name="username" 
+        placeholder="Username*" 
+        class="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
+        required
+    >
+    <input 
+        type="password" 
+        name="password" 
+        placeholder="Password*" 
+        class="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
+        required
+    >
+    <button 
+        type="submit"
+        id="addServerButton"
+        class="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition-colors"
+    >
+        Add Server
+    </button>
+</form>
+
+<script>
+    const closeButton = document.getElementById("closeServerConfigurationPopup");
+    const popup = document.getElementById("serverConfigurationPopup");
+
+    closeButton.addEventListener("click", () => {
+        popup.classList.add("hidden");
+    });
+
+    // Popup dışına tıklandığında kapatma
+    popup.addEventListener("click", (e) => {
+        if (e.target === popup) {
+            popup.classList.add("hidden");
+        }
+    });
+</script>
