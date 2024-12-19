@@ -5,9 +5,42 @@
 {% endblock %}
 
 {% block main_content %}
-
     <main class="ml-64 p-8">
-        <!-- Buraya içeriğiniz gelecek -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for server in servers %}
+            <div class="bg-white border border-gray-200 rounded-xl shadow-md 
+                        p-6 transform transition-all duration-300 
+                        hover:shadow-xl hover:scale-105 
+                        hover:border-blue-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">{{ server.name }}</h3>
+                    <span class="text-sm {% if server.status %}text-green-600{% else %}text-red-600{% endif %} 
+                                 bg-gray-100 px-2 py-1 rounded-full">
+                        {{ server.status|yesno:"Active,Inactive" }}
+                    </span>
+                </div>
+                <div class="space-y-2 text-gray-600">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                        </svg>
+                        <span>{{ server.ip }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h3m-3-9a9 9 0 01-9 9m9-9a9 9 0 00-9-9"></path>
+                        </svg>
+                        <span>Port: {{ server.port }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <span>{{ server.username }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </main>
-    
 {% endblock %}

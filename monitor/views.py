@@ -3,12 +3,13 @@ from django.shortcuts import render, redirect
 from monitor.Models.MonitorModels import (AllMonitorModel,
                  CPUModel, MemoryModel,
                  DiskModel, NetworkModel)
-from monitor.Models.ServerConfig import ServerConfig
+from monitor.models import ServerConfig
 from user.models import User, UserConfig
 from .utils.MonitorTools import MonitorTools
 
 @login_required(login_url='/user/login')
 def add_server(request):
+    user = User.objects.get(id=request.user.id)
     if request.method == "POST":
         name = request.POST.get('name')
         ip = request.POST.get('ip')
@@ -17,14 +18,16 @@ def add_server(request):
         password = request.POST.get('password')
         
         server = ServerConfig(
+            user=user,
             name=name,
             ip=ip,
             port=port,
             username=username,
             password=password,
-            status='active'
+            status=True
         )
         server.save()
+        return redirect('settings')
 
 @login_required(login_url='/user/login')
 def save_settings(request):
@@ -86,7 +89,10 @@ def dashboard(request):
 
 @login_required(login_url='/user/login')
 def server_list(request):
-    return render(request, 'monitor/server_list.html')
+    user = User.objects.filter(id=request.user.id).first()
+    servers = ServerConfig.objects.filter(user=user)
+    context = {"servers": servers}
+    return render(request, 'monitor/server_list.html', context)
 
 @login_required(login_url='/user/login')
 def monitoring(request):

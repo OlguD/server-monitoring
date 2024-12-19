@@ -17,7 +17,7 @@ class User(models.Model):
         ]
     
     def __str__(self):
-        return f"{self.username} {self.is_active} {self.is_admin}"
+        return f"{self.username}"
 
 class UserConfig(models.Model):
     INTERVAL_CHOICES = [
