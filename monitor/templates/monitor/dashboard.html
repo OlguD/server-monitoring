@@ -13,7 +13,7 @@
                 <h3 class="text-gray-600 font-medium">CPU Usage</h3>
                 <div class="text-2xl font-bold mt-2">{{ cpu.usage }} %</div>
                 <div class="bg-gray-200 rounded-full h-2 mt-2">
-                    <div class="bg-blue-500 rounded-full h-2" style="width: 45%"></div>
+                    <div class="bg-blue-500 rounded-full h-2" style="width: {{ cpu.usage }}%"></div>
                 </div>
             </div>
 
@@ -22,7 +22,7 @@
                 <h3 class="text-gray-600 font-medium">Memory Usage</h3>
                 <div class="text-2xl font-bold mt-2">{{ memory.usage }} %</div>
                 <div class="bg-gray-200 rounded-full h-2 mt-2">
-                    <div class="bg-green-500 rounded-full h-2" style="width: 51%"></div>
+                    <div class="bg-green-500 rounded-full h-2" style="width: {{ memory.usage }}%"></div>
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                 <h3 class="text-gray-600 font-medium">Disk Space</h3>
                 <div class="text-2xl font-bold mt-2">{{ disk.usage }} %</div>
                 <div class="bg-gray-200 rounded-full h-2 mt-2">
-                    <div class="bg-yellow-500 rounded-full h-2" style="width: 47%"></div>
+                    <div class="bg-yellow-500 rounded-full h-2" style="width: {{ disk.usage }}%"></div>
                 </div>
             </div>
 
