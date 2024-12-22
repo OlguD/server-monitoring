@@ -130,3 +130,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# SESSION COOKIE LIFE TIME
+SESSION_COOKIE_AGE = 60 * 60 * 24 # 1 day
