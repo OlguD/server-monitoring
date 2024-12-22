@@ -1,5 +1,5 @@
 {% extends "monitor/base_dashboard.html" %}
-
+{% load static %}
 {% block title %}
     Dashboard
 {% endblock %}
@@ -136,5 +136,7 @@
         </div> {% endcomment %}
 
     </main>
-
+    {% block extra_js %}
+        <script src="{% static 'monitor/js/dashboard.js' %}"></script>
+    {% endblock %}
 {% endblock %}

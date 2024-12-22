@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 
 from monitor.Models.MonitorModels import (AllMonitorModel,
                  CPUModel, MemoryModel,
@@ -29,7 +29,19 @@ def add_server(request):
             status=True
         )
         server.save()
-        return redirect('settings')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required(login_url='/user/login')
+def delete_server(request, server_id):
+    if request.method == "DELETE":
+        try:
+            server = ServerConfig.objects.get(id=server_id)
+            server.delete()
+            return JsonResponse({"message": "Server deleted successfully"})
+        except Exception as e:
+            return JsonResponse({"error": f"Error deleting server: {str(e)}"}, status=500)
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
 
 @login_required(login_url='/user/login')
 def save_settings(request):
