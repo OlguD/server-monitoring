@@ -78,4 +78,4 @@ http://127.0.0.1:8000/
 
 
 ## License
-This project is licensed under the GNU General Public License v3.0 - see the [https://github.com/OlguD/server-monitoring/blob/main/LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](https://github.com/OlguD/server-monitoring/blob/main/LICENSE) file for details.
