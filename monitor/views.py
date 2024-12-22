@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+
 from monitor.Models.MonitorModels import (AllMonitorModel,
                  CPUModel, MemoryModel,
                  DiskModel, NetworkModel)
@@ -59,36 +61,63 @@ def save_settings(request):
 # Create your views here.
 @login_required(login_url='/user/login')
 def dashboard(request):
-    # AllMonitorModel doğrudan render'a gönderilemez
-    # Dictionary'ye dönüştürülmeli veya context oluşturulmalı
-    # user = User.objects.filter(id=request.user.id).first()
-    # user_config = UserConfig.objects.get_or_create(user=user)
-    # check_interval = user_config[0].check_interval
-
-    network_data = MonitorTools.network_usage()
-
-    all_monitor = AllMonitorModel(
-        cpu=CPUModel(usage=MonitorTools.cpu_usage()),
-        memory=MemoryModel(usage=MonitorTools.memory_usage()),
-        disk=DiskModel(usage=MonitorTools.disk_usage()),
-        network=NetworkModel(
-            total_usage_gb=network_data[0],
-            sent_mb=network_data[1],
-            recv_mb=network_data[2]
-        ),
-        processes=list(MonitorTools.get_process_details())
-    )
-    
-    # Pydantic modelini dictionary'ye çevir
-    context = {
-        'cpu': all_monitor.cpu.model_dump(),
-        'memory': all_monitor.memory.model_dump(),
-        'disk': all_monitor.disk.model_dump(),
-        'network': all_monitor.network.model_dump(),
-        'processes': [process.model_dump() for process in all_monitor.processes]
-    }
-    
+    user = User.objects.filter(id=request.user.id).first()
+    servers = ServerConfig.objects.filter(user=user)
+    context = {"servers": servers}
     return render(request, 'monitor/dashboard.html', context)
+
+@login_required(login_url='/user/login')
+def dashboard_data(request):
+    selected_server = request.GET.get('server')
+    user = User.objects.filter(id=request.user.id).first()
+
+    available_servers = ServerConfig.objects.filter(user=user)
+
+    server = ServerConfig.objects.filter(
+            user=user,
+            name=selected_server
+        ).first()
+
+    try:
+        monitor = MonitorTools(server)
+        
+        network_data = monitor.network_usage()
+        all_monitor = AllMonitorModel(
+            cpu=CPUModel(usage=monitor.cpu_usage()),
+            memory=MemoryModel(usage=monitor.memory_usage()),
+            disk=DiskModel(usage=monitor.disk_usage()),
+            network=NetworkModel(
+                total_usage_gb=network_data[0],
+                sent_mb=network_data[1],
+                recv_mb=network_data[2]
+            ),
+            processes=list(monitor.get_process_details())
+        )
+        
+        data = {
+            "server": server.name,
+            "cpu": all_monitor.cpu.model_dump(),
+            "memory": all_monitor.memory.model_dump(),
+            "disk": all_monitor.disk.model_dump(),
+            "network": all_monitor.network.model_dump(),
+            'processes': [process.model_dump() for process in all_monitor.processes]
+        }
+        return JsonResponse(data)
+            
+    except Exception as e:
+        return JsonResponse({
+            "error": f"Server connection error: {str(e)}",
+            "server_info": {
+                "name": server.name,
+                "ip": server.ip,
+                "port": server.port
+            }
+        }, status=500)
+
+    except Exception as e:
+        return JsonResponse({
+            "error": f"General error: {str(e)}"
+        }, status=500)
 
 @login_required(login_url='/user/login')
 def server_list(request):
@@ -96,10 +125,6 @@ def server_list(request):
     servers = ServerConfig.objects.filter(user=user)
     context = {"servers": servers}
     return render(request, 'monitor/server_list.html', context)
-
-@login_required(login_url='/user/login')
-def monitoring(request):
-    return render(request, 'monitor/monitoring.html')
 
 @login_required(login_url='/user/login')
 def settings(request):
