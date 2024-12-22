@@ -1,3 +1,5 @@
 Django
 psutil
 pydantic
+channels
+paramiko
