@@ -1,75 +1,72 @@
 # Server Monitoring Application
 
-A Django web application developed for monitoring and managing server status.
-
-![Server Monitoring Dashboard](assets/server-monitoring-dashboard.png)
+A modern Django web application for monitoring and managing server statuses.
 
 ## Features
 
-- **User Management** (Register, Login, Logout)
-- **Server Status Monitoring**
-- **Dashboard Viewing**
+- 👤 **User Management** (Register, Login, Logout)
+- 📊 **Server Status Monitoring**
+- 🖥️ **Dashboard Viewing**
 
 ## Technologies
 
-- **Python** 3.12
-- **Django** 5.1.4
-- **Tailwind CSS** 3.4.17
-- **SQLite3**
+- 🐍 **Python** 3.12
+- 🌐 **Django** 5.1.4
+- 💅 **Tailwind CSS** 3.4.17
+- 🗄️ **SQLite3**
+- 📜 **JavaScript**
+
+## Screenshots
+
+![Dashboard](assets/dashboard.png)
+![Servers Page](assets/servers_page.png)
+![Settings Page](assets/settings_page.png)
 
 ## Installation
 
-### Clone the project
+### Clone the Project
 
 ```bash
 git clone git@github.com:OlguD/server-monitoring.git
 cd server-monitoring
 ```
 
-### Create and activate virtual environment
-
+### Create and Activate Virtual Environment
 ```bash
 python -m venv venv
 source venv/bin/activate  # For Linux/Mac
 # venv\Scripts\activate  # For Windows
 ```
 
-### Install required Python packages
-
+### Install Required Python Packages
 ```bash
 pip install -r requirements.txt
 ```
 
-### Install Node.js packages
-
+### Install Node.js Packages
 ```bash
 npm install
 ```
 
-### Apply Django migrations
-
+### Apply Django Migrations
 ```bash
 python manage.py migrate
 ```
 
 ### Compile Tailwind CSS
-
 ```bash
 npm run dev
 ```
 
-### Run the application
-
+### Run the Application
 ```bash
 python manage.py runserver
 ```
 
-
-## Usage
-
-- Create a new account at [http://127.0.0.1:8000/user/register/](http://127.0.0.1:8000/user/register/)
-- Login at [http://127.0.0.1:8000/user/login/](http://127.0.0.1:8000/user/login/)
-- Monitor your servers through the dashboard
+### Go To This URL
+```bash
+http://127.0.0.1:8000/
+```
 
 ## Contributing
 
@@ -80,6 +77,5 @@ python manage.py runserver
 5. Create a Pull Request
 
 
-## Contact
-
-olgudegirmenci34@gmail.com
+## License
+This project is licensed under the GNU General Public License v3.0 - see the [https://github.com/OlguD/server-monitoring/blob/main/LICENSE]LICENSE file for details.
