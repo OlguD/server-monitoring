@@ -3,21 +3,31 @@
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body class="bg-slate-600">
-    
+    <!-- Mobil Menü (Üst bar) -->
+    <div class="md:hidden fixed top-0 left-0 right-0 bg-gray-800 text-white p-4 z-50 flex justify-between items-center">
+        <h1 class="text-xl font-bold">Server Monitor</h1>
+        <button id="mobile-menu-button" class="p-2 hover:bg-gray-700 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </div>
+
     <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-screen w-64 bg-gray-800 text-white shadow-lg">
-        <!-- Logo/Header Area -->
-        <div class="p-4 border-b border-gray-700">
+    <aside id="sidebar" class="fixed left-0 top-0 h-screen w-64 bg-gray-800 text-white shadow-lg transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0 z-40">
+        <!-- Logo/Header Area - Sadece desktop'ta görünür -->
+        <div class="p-4 border-b border-gray-700 hidden md:block">
             <h1 class="text-xl font-bold">Server Monitor</h1>
         </div>
 
         <!-- Navigation Menu -->
-        <nav class="mt-6">
-            <div class="px-4 space-y-2">
-                {% comment %} <img src="{% static 'MonitorHub.webp' %}" class="rounded-full mx-auto" style="width: 100px; height: 100px;"> {% endcomment %}
+        <nav class="mt-6 md:mt-0">
+            <!-- Mobil için ekstra padding -->
+            <div class="px-4 space-y-2 mt-16 md:mt-6">
                 <!-- Dashboard Link -->
                 <a href="{% url 'dashboard' %}" 
                 class="flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-700 {% if request.resolver_match.url_name == 'dashboard' %}bg-gray-700{% endif %}">
@@ -64,12 +74,18 @@
         </nav>
     </aside>
 
-    {% block main_content %}
+    <!-- Ana İçerik -->
+    <main class="transition-all duration-300 md:ml-64 p-4 mt-16 md:mt-0">
+        {% block main_content %}
+        {% endblock %}
+    </main>
 
-    {% endblock %}
-    
     {% block extra_js %}
-    
     {% endblock %}
+
+</body>
+</html>
+    <!-- Mobil Menü JavaScript -->
+    <script type="module" src="{% static 'monitor/js/base_dashboard.js' %}"></script>
 </body>
 </html>

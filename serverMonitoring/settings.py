@@ -32,7 +32,7 @@ DEBUG = 'RENDER' not in os.environ
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.herokuapp.com']
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.pulsetrack.live']
-CSRF_TRUSTED_ORIGINS = ['https://pulsetrack.live']
+CSRF_TRUSTED_ORIGINS = ['https://pulsetrack.live', 'https://www.pulsetrack.live']
 
 
 # Application definition
@@ -157,13 +157,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_AGE = 60 * 60 * 24 # 1 day
 
 
-# SSL/HTTPS Ayarları
-SECURE_SSL_REDIRECT = True  # HTTP'den HTTPS'e yönlendirme
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_HSTS_SECONDS = 31536000  # 1 yıl
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+if DEBUG:
+    # Development ortamı ayarları
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+else:
+    # Production ortamı ayarları
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_HSTS_SECONDS = 31536000  # 1 yıl
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
