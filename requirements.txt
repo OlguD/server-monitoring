@@ -1,4 +1,5 @@
 Django
+django-extensions
 psutil
 pydantic
 channels
