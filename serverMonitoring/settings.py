@@ -31,8 +31,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = 'RENDER' not in os.environ
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.herokuapp.com']
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.herokuapp.com']
-CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.pulsetrack.live']
+CSRF_TRUSTED_ORIGINS = ['https://pulsetrack.live']
 
 
 # Application definition
