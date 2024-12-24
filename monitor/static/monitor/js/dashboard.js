@@ -1,47 +1,54 @@
-// dashboard.js
+import  ChartManager  from './charts.js';
 
-let monitoringInterval = null;
-let isMonitoring = false;
+const DashboardMonitor = {
+    interval: null,
+    isMonitoring: false,
 
-function getSelectedServer() {
-    const serverSelect = document.querySelector('select[name="servers"]');
-    const selectedServer = serverSelect ? serverSelect.value : null;
-    return selectedServer;
-}
+    getSelectedServer() {
+        const serverSelect = document.querySelector('select[name="servers"]');
+        return serverSelect ? serverSelect.value : null;
+    },
 
-function updateDashboard() {
-    const selectedServer = getSelectedServer();
-    
-    if (!selectedServer) {
-        console.log('No server selected, skipping update');
-        return;
-    }
-
-    console.log("Fetching data for server:", selectedServer);
-    fetch(`/dashboard/dashboard-data/?server=${encodeURIComponent(selectedServer)}`, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json'
-        }
-    })
-    .then(async response => {
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Server error response:', errorText);
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Raw API Response:', data);
+    updateDashboard() {
+        const selectedServer = this.getSelectedServer();
         
-        // Hassas formatlamak için yardımcı fonksiyon
+        if (!selectedServer) {
+            console.log('No server selected, skipping update');
+            return;
+        }
+
+        fetch(`/dashboard/dashboard-data/?server=${encodeURIComponent(selectedServer)}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(async response => {
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Server error response:', errorText);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Raw API Response:', data);
+            this.updateMetrics(data);
+            // ChartManager'ı da aynı veriyle güncelle
+            ChartManager.updateChart(data);
+        })
+        .catch(error => {
+            console.error('Error fetching dashboard data:', error);
+            this.stopMonitoring();
+        });
+    },
+
+    updateMetrics(data) {
         const formatValue = (value) => {
             const num = Number(value || 0);
-            // Değer 1'den küçükse 3 ondalık, değilse 1 ondalık göster
             return num < 1 ? num.toFixed(3) : num.toFixed(1);
         };
-        
+
         // CPU Usage güncelleme
         const cpuValueElement = document.getElementById('cpu-usage-value');
         const cpuBarElement = document.getElementById('cpu-usage-bar');
@@ -49,7 +56,6 @@ function updateDashboard() {
         if (cpuValueElement && cpuBarElement) {
             const cpuUsage = Number(data.cpu?.usage || 0);
             cpuValueElement.textContent = `${formatValue(cpuUsage)} %`;
-            // Progress bar için minimum 0.5% genişlik kullan ki çok küçük değerler de görünsün
             cpuBarElement.style.width = `${Math.max(cpuUsage, 0.5)}%`;
         }
 
@@ -77,7 +83,6 @@ function updateDashboard() {
         const networkValueElement = document.getElementById('network-usage-value');
         if (networkValueElement) {
             const totalUsage = Number(data.network?.total_usage_gb || 0);
-            // Network için daha hassas format
             if (totalUsage < 0.001) {
                 const mbValue = totalUsage * 1000;
                 networkValueElement.textContent = `${mbValue.toFixed(3)} MB`;
@@ -85,32 +90,28 @@ function updateDashboard() {
                 networkValueElement.textContent = `${totalUsage.toFixed(3)} GB`;
             }
         }
-    })
-    .catch(error => {
-        console.error('Error fetching dashboard data:', error);
-        stopMonitoring();
-    });
-}
+    },
 
-function startMonitoring() {
-    const selectedServer = getSelectedServer();
-    if (!selectedServer) {
-        alert('Please select a server first');
-        return;
-    }
+    startMonitoring() {
+        const selectedServer = this.getSelectedServer();
+        if (!selectedServer) {
+            alert('Please select a server first');
+            return;
+        }
 
-    if (!monitoringInterval) {
-        updateDashboard(); // İlk güncelleme
-        monitoringInterval = setInterval(updateDashboard, 5000);
-    }
-}
+        if (!this.interval) {
+            this.updateDashboard();  // İlk veriyi al
+            this.interval = setInterval(() => this.updateDashboard(), 5000);
+        }
+    },
 
-function stopMonitoring() {
-    if (monitoringInterval) {
-        clearInterval(monitoringInterval);
-        monitoringInterval = null;
+    stopMonitoring() {
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
     }
-}
+};
 
 // Sayfa yüklendiğinde
 document.addEventListener('DOMContentLoaded', function() {
@@ -119,15 +120,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const stopIcon = document.getElementById('stopIcon');
     const toggleText = document.getElementById('toggleText');
     const serverSelect = document.querySelector('select[name="servers"]');
+    const countdownElement = document.getElementById('countdown');
 
-    // İlk yüklemede güncelleme yapma
-    stopMonitoring();
+    // Chart'ı başlat
+    ChartManager.init();
 
-    // Server seçimi değiştiğinde monitoring'i durdur
-    serverSelect.addEventListener('change', function() {
-        if (isMonitoring) {
-            stopMonitoring();
-            isMonitoring = false;
+    if (countdownElement) {
+        CountdownManager.start(countdownElement);
+    }
+
+    // İzlemeyi durdur
+    DashboardMonitor.stopMonitoring();
+
+    serverSelect?.addEventListener('change', function() {
+        if (DashboardMonitor.isMonitoring) {
+            DashboardMonitor.stopMonitoring();
+            DashboardMonitor.isMonitoring = false;
             toggleButton.classList.remove('bg-red-500', 'hover:bg-red-600');
             toggleButton.classList.add('bg-blue-500', 'hover:bg-blue-600');
             playIcon.classList.remove('hidden');
@@ -136,24 +144,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    toggleButton.addEventListener('click', function() {
-        const selectedServer = getSelectedServer();
+    toggleButton?.addEventListener('click', function() {
+        const selectedServer = DashboardMonitor.getSelectedServer();
         if (!selectedServer) {
             alert('Please select a server first');
             return;
         }
 
-        isMonitoring = !isMonitoring;
+        DashboardMonitor.isMonitoring = !DashboardMonitor.isMonitoring;
         
-        if (isMonitoring) {
-            startMonitoring();
+        if (DashboardMonitor.isMonitoring) {
+            DashboardMonitor.startMonitoring();
             toggleButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
             toggleButton.classList.add('bg-red-500', 'hover:bg-red-600');
             playIcon.classList.add('hidden');
             stopIcon.classList.remove('hidden');
             toggleText.textContent = 'Stop Monitoring';
         } else {
-            stopMonitoring();
+            DashboardMonitor.stopMonitoring();
             toggleButton.classList.remove('bg-red-500', 'hover:bg-red-600');
             toggleButton.classList.add('bg-blue-500', 'hover:bg-blue-600');
             playIcon.classList.remove('hidden');

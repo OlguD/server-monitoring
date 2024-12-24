@@ -2,12 +2,16 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponseRedirect
 
+from .utils.MonitorTools import MonitorTools
+
 from monitor.Models.MonitorModels import (AllMonitorModel,
                  CPUModel, MemoryModel,
                  DiskModel, NetworkModel)
 from monitor.models import ServerConfig
+
 from user.models import User, UserConfig
-from .utils.MonitorTools import MonitorTools
+from user.utils.is_user_subscribed import is_user_subscribed
+
 
 @login_required(login_url='/user/login')
 def add_server(request):
@@ -71,13 +75,22 @@ def save_settings(request):
 
 
 # Create your views here.
+@is_user_subscribed(time_limit=600) # 600 saniye (10 dakika)
 @login_required(login_url='/user/login')
-def dashboard(request):
+def dashboard(request, remaining_time=None):
     user = User.objects.filter(id=request.user.id).first()
     servers = ServerConfig.objects.filter(user=user)
-    context = {"servers": servers}
+
+    if remaining_time:
+        minute_left = int(remaining_time//60)
+        seconds_left = int(remaining_time%60)
+        context = {"servers": servers, "remaining_time": remaining_time }
+    else:
+        context = {"servers": servers}
     return render(request, 'monitor/dashboard.html', context)
 
+
+# @is_user_subscribed(time_limit=600) # 600 saniye (10 dakika)
 @login_required(login_url='/user/login')
 def dashboard_data(request):
     selected_server = request.GET.get('server')
@@ -154,3 +167,6 @@ def settings(request):
    except Exception as e:
        print(f"Error in settings view: {e}")
        return redirect('dashboard')
+
+def subscription_page(request):
+    return render(request, 'user/subscription_page.html')

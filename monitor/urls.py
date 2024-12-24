@@ -9,4 +9,5 @@ urlpatterns = [
     path('add_server/', views.add_server, name='add_server'),
     path('delete-server/<int:server_id>/', views.delete_server, name='delete_server'),
     path('save_settings/', views.save_settings, name='save_settings'),
+    path('subscription/', views.subscription_page, name='subscription_page'),
 ]

@@ -4,6 +4,7 @@
     Dashboard
 {% endblock %}
 
+
 {% block main_content %}
     {% csrf_token %}
     <main class="ml-64 p-8">
@@ -28,6 +29,17 @@
                     {% endfor %}
                 </select>
             </div>
+            {% if remaining_time %}
+                <div class="">
+                    <p>Time Remaining: 
+                        <span id="countdown" 
+                            class="text-green-500" 
+                            data-remaining-time="{{ remaining_time|floatformat:0 }}">
+                        </span>
+                    </p>
+                </div>
+                <button id="reset-button">Reset Time</button>
+            {% endif %}
         </div>
 
 
@@ -67,6 +79,12 @@
                     <span id="network-sent">↑ {{ network.sent_mb }} MB/s</span>
                     <span id="network-recv">↓ {{ network.recv_mb }} MB/s</span>
                 </div>
+            </div>
+
+            {% comment %} CHART {% endcomment %}
+            <div class="col-span-1 md:col-span-2 lg:col-span-4 bg-white rounded-lg shadow p-4 min-h-[300px]">
+                <h2 class="text-lg font-semibold mb-4">System Performance Chart</h2>
+                <canvas id="chart" height="150"></canvas>
             </div>
         </div>
 
@@ -137,6 +155,9 @@
 
     </main>
     {% block extra_js %}
-        <script src="{% static 'monitor/js/dashboard.js' %}"></script>
+        <script type="module" src="{% static 'monitor/js/dashboard.js' %}"></script>
+        <script type="module" src="{% static 'monitor/js/charts.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {% endblock %}
+
 {% endblock %}

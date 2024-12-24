@@ -2,6 +2,7 @@
 import psutil
 from typing import Generator, Optional
 import paramiko
+import socket
 from monitor.Models.MonitorModels import ProcessModel
 
 class MonitorTools:

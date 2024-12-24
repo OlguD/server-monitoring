@@ -3,3 +3,7 @@ psutil
 pydantic
 channels
 paramiko
+gunicorn
+whitenoise
+dj-database-url
+psycopg2-binary

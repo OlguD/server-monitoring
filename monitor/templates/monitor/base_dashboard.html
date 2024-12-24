@@ -17,6 +17,7 @@
         <!-- Navigation Menu -->
         <nav class="mt-6">
             <div class="px-4 space-y-2">
+                {% comment %} <img src="{% static 'MonitorHub.webp' %}" class="rounded-full mx-auto" style="width: 100px; height: 100px;"> {% endcomment %}
                 <!-- Dashboard Link -->
                 <a href="{% url 'dashboard' %}" 
                 class="flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-700 {% if request.resolver_match.url_name == 'dashboard' %}bg-gray-700{% endif %}">
