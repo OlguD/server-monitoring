@@ -9,31 +9,46 @@ from monitor.Models.MonitorModels import (AllMonitorModel,
                  DiskModel, NetworkModel)
 from monitor.models import ServerConfig
 
-from user.models import User, UserConfig
+from user.models import UserModel, UserConfig
 from user.utils.is_user_subscribed import is_user_subscribed
 
 
 @login_required(login_url='/user/login')
 def add_server(request):
-    user = User.objects.get(id=request.user.id)
     if request.method == "POST":
         name = request.POST.get('name')
-        ip = request.POST.get('ip')
+        ip = request.POST.get('ip') 
         port = request.POST.get('port')
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        server = ServerConfig(
-            user=user,
-            name=name,
-            ip=ip,
-            port=port,
-            username=username,
-            password=password,
-            status=True
-        )
-        server.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        if not all([ip, port, username, password]):  # Name can be optional
+            # messages.error(request, 'Please fill in all required fields')
+            return redirect('server_list')
+            
+        try:
+            # Get the authenticated user directly from request
+            user = request.user
+            
+            # Create new server configuration
+            server = ServerConfig.objects.create(
+                user=user,
+                name=name or f"Server {ip}",  # Use IP as name if none provided
+                ip=ip,
+                port=port, 
+                username=username,
+                password=password,
+                status=True
+            )
+            
+            # messages.success(request, 'Server added successfully')
+            return redirect('server_list')
+
+        except Exception as e:
+            # messages.error(request, f'Error adding server: {str(e)}')
+            return redirect('server_list')
+            
+    return redirect('server_list')
 
 @login_required(login_url='/user/login')
 def delete_server(request, server_id):
@@ -51,9 +66,9 @@ def delete_server(request, server_id):
 def save_settings(request):
    if request.method == "POST":
        try:
-           user = User.objects.filter(email=request.user.email).first()
+           user = UserModel.objects.filter(email=request.user.email).first()
            if not user:
-               user = User.objects.create(
+               user = UserModel.objects.create(
                    username=request.user.username,
                    email=request.user.email,
                    id=request.user.id
@@ -78,7 +93,7 @@ def save_settings(request):
 @is_user_subscribed(time_limit=600) # 600 saniye (10 dakika)
 @login_required(login_url='/user/login')
 def dashboard(request, remaining_time=None):
-    user = User.objects.filter(id=request.user.id).first()
+    user = UserModel.objects.filter(id=request.user.id).first()
     servers = ServerConfig.objects.filter(user=user)
 
     if remaining_time:
@@ -94,7 +109,7 @@ def dashboard(request, remaining_time=None):
 @login_required(login_url='/user/login')
 def dashboard_data(request):
     selected_server = request.GET.get('server')
-    user = User.objects.filter(id=request.user.id).first()
+    user = UserModel.objects.filter(id=request.user.id).first()
 
     available_servers = ServerConfig.objects.filter(user=user)
 
@@ -146,7 +161,8 @@ def dashboard_data(request):
 
 @login_required(login_url='/user/login')
 def server_list(request):
-    user = User.objects.filter(id=request.user.id).first()
+    # user = UserModel.objects.filter(id=request.user.id).first()
+    user = request.user
     servers = ServerConfig.objects.filter(user=user)
     context = {"servers": servers}
     return render(request, 'monitor/server_list.html', context)
@@ -154,7 +170,7 @@ def server_list(request):
 @login_required(login_url='/user/login')
 def settings(request):
    try:
-       user = User.objects.filter(email=request.user.email).first()
+       user = UserModel.objects.filter(email=request.user.email).first()
        if not user:
            user = User.objects.create(
                username=request.user.username, 

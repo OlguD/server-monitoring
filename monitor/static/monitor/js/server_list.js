@@ -52,6 +52,46 @@ window.deleteServer = function(serverId, serverName) {
     };
 }
 
+window.addServer = function() {
+    const serverName = document.getElementById('serverName').value;
+    const serverIp = document.getElementById('serverIp').value;
+    const serverPort = document.getElementById('serverPort').value;
+    const serverUsername = document.getElementById('serverUsername').value;
+    const serverPassword = document.getElementById('serverPassword').value;
+
+    fetch('/dashboard/add_server/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            name: serverName,
+            ip: serverIp,
+            port: serverPort,
+            username: serverUsername,
+            password: serverPassword
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Server added successfully:', data);
+        closeAddServerModal();
+        location.reload();  // Reload the page to show the new server
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to add server. Please try again.');
+    });
+
+    return false;
+}
+
 window.closeDeleteModal = function() {
     const modal = document.getElementById('deleteConfirmModal');
     if (!modal) return;

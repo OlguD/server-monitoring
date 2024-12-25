@@ -24,9 +24,13 @@
             </div>
             <div class="">
                 <select name="servers" class="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none">
-                    {% for server in servers %}
-                        <option value="{{ server.name}}">{{ server.name }}</option>
-                    {% endfor %}
+                    {% if servers %}
+                        {% for server in servers %}
+                            <option value="{{ server.name}}">{{ server.name }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option value="">No Servers Found</option>
+                    {% endif %}
                 </select>
             </div>
             {% if remaining_time %}
@@ -74,7 +78,7 @@
             {% comment %} Network Traffic {% endcomment %}
             <div class="bg-white rounded-lg shadow p-4">
                 <h3 class="text-gray-600 font-medium">Network Traffic</h3>
-                <div class="text-2xl font-bold mt-2" id="network-usage-value">0 GB/s</div>
+                <div class="text-2xl font-bold mt-2" id="network-usage-value">0 MB/s</div>
                 <div class="flex justify-between text-sm text-gray-500">
                     <span id="network-sent">↑ {{ network.sent_mb }} MB/s</span>
                     <span id="network-recv">↓ {{ network.recv_mb }} MB/s</span>

@@ -83,11 +83,11 @@ const DashboardMonitor = {
         const networkValueElement = document.getElementById('network-usage-value');
         if (networkValueElement) {
             const totalUsage = Number(data.network?.total_usage_gb || 0);
-            if (totalUsage < 0.001) {
+            if (totalUsage < 1) {
                 const mbValue = totalUsage * 1000;
-                networkValueElement.textContent = `${mbValue.toFixed(3)} MB`;
+                networkValueElement.textContent = `${mbValue.toFixed(3)} MB/s`;
             } else {
-                networkValueElement.textContent = `${totalUsage.toFixed(3)} GB`;
+                networkValueElement.textContent = `${totalUsage.toFixed(3)} GB/s`;
             }
         }
     },

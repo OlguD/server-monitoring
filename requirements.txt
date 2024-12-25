@@ -1,4 +1,4 @@
-Django
+django
 django-extensions
 psutil
 pydantic

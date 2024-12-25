@@ -1,9 +1,8 @@
 from django.db import models
-from user.models import User
 
 # Create your models here.
 class ServerConfig(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey('user.UserModel', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     ip = models.GenericIPAddressField()
     port = models.IntegerField()
@@ -11,9 +10,9 @@ class ServerConfig(models.Model):
     password = models.CharField(max_length=200)
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        ordering = ['-created_at']
         verbose_name = 'Server Configuration'
         verbose_name_plural = 'Server Configurations'
         indexes = [

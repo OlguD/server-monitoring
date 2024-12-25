@@ -2,8 +2,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}{% endblock %}</title>
+    <title>PulseTrack | {% block title %}{% endblock %}</title>
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="icon" href="{% static 'assets/logo1.png' %}" type="image/png">
     {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-slate-600">
@@ -12,7 +13,10 @@
     <aside class="fixed left-0 top-0 h-screen w-64 bg-gray-800 text-white shadow-lg">
         <!-- Logo/Header Area -->
         <div class="p-4 border-b border-gray-700">
-            <h1 class="text-xl font-bold">Server Monitor</h1>
+            <div class="flex items-center space-x-2">
+                <img src="{% static 'assets/logo1.png' %}" alt="Logo" class="h-12 w-12">
+                <h1 class="text-xl font-bold">PulseTrack</h1>
+            </div>
         </div>
 
         <!-- Navigation Menu -->

@@ -176,3 +176,6 @@ else:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+AUTH_USER_MODEL = 'user.UserModel'
+AUTHENTICATION_BACKENDS = ['user.backends.CustomUserBackend', 'django.contrib.auth.backends.ModelBackend']
