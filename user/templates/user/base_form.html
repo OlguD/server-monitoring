@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server Monitoring | {% block title %}{% endblock %}</title>
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="icon" href="{% static 'assets/logo1.png' %}" type="image/png">
     {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-gray-900 min-h-screen flex items-center justify-center p-4">
@@ -19,7 +20,10 @@
                 {% endfor %}
             {% endif %}
 
-            <h1 class="text-2xl font-bold text-white mb-6 text-center">{% block header %}{% endblock %}</h1>
+            <div class="flex justify-center mb-4">
+                <img src="{% static 'assets/logo1.png' %}" alt="Logo" class="h-32 w-32">
+            </div>
+            <h1 class="text-2xl font-bold text-white mb-6 text-center">PulseTrack | {% block header %}{% endblock %}</h1>
             
             <form method="post">
                 {% csrf_token %}

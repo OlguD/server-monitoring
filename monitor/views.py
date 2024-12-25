@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib import messages
 
 from .utils.MonitorTools import MonitorTools
 
@@ -23,7 +24,7 @@ def add_server(request):
         password = request.POST.get('password')
         
         if not all([ip, port, username, password]):  # Name can be optional
-            # messages.error(request, 'Please fill in all required fields')
+            messages.error(request, 'Please fill in all required fields')
             return redirect('server_list')
             
         try:
@@ -41,11 +42,11 @@ def add_server(request):
                 status=True
             )
             
-            # messages.success(request, 'Server added successfully')
+            messages.success(request, 'Server added successfully')
             return redirect('server_list')
 
         except Exception as e:
-            # messages.error(request, f'Error adding server: {str(e)}')
+            messages.error(request, f'Error adding server: {str(e)}')
             return redirect('server_list')
             
     return redirect('server_list')
@@ -56,8 +57,10 @@ def delete_server(request, server_id):
         try:
             server = ServerConfig.objects.get(id=server_id)
             server.delete()
+            messages.success(request, 'Server deleted successfully')
             return JsonResponse({"message": "Server deleted successfully"})
         except Exception as e:
+            messages.error(request, f'Error deleting server: {str(e)}')
             return JsonResponse({"error": f"Error deleting server: {str(e)}"}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
@@ -90,7 +93,7 @@ def save_settings(request):
 
 
 # Create your views here.
-@is_user_subscribed(time_limit=600) # 600 saniye (10 dakika)
+# @is_user_subscribed(time_limit=600) # 600 saniye (10 dakika)
 @login_required(login_url='/user/login')
 def dashboard(request, remaining_time=None):
     user = UserModel.objects.filter(id=request.user.id).first()
@@ -155,6 +158,7 @@ def dashboard_data(request):
         }, status=500)
 
     except Exception as e:
+        messages.error(request, f'Error fetching server data: {str(e)}')
         return JsonResponse({
             "error": f"General error: {str(e)}"
         }, status=500)

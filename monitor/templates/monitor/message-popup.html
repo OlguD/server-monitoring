@@ -1,0 +1,27 @@
+<div id="messagePopup" class="fixed left-1/2 transform -translate-x-1/2 bg-gray-800 text-white p-4 rounded-lg shadow-lg z-50 transition-all duration-500 opacity-0 -top-24">
+    <p id="messageText" class="text-center">
+        {% if message %}{{ message }}{% endif %}
+    </p>
+    <button id="closeMessagePopup" class="absolute top-2 right-2 text-white text-xl">&times;</button>
+</div>
+
+<script>
+    const messagePopup = document.getElementById("messagePopup");
+    const closeMessagePopup = document.getElementById("closeMessagePopup");
+
+    function showMessage(message) {
+        const messageText = document.getElementById('messageText');
+        messageText.textContent = message;
+        messagePopup.classList.add('top-5', 'opacity-100');
+        setTimeout(() => {
+            messagePopup.classList.remove('top-5', 'opacity-100');
+        }, 2500);
+    }
+
+    closeMessagePopup.addEventListener("click", () => {
+        messagePopup.classList.remove("top-5", "opacity-100");
+    });
+
+    // Example usage
+    showMessage('{{ message|default:"Hello, this is a test message!" }}');
+</script>
